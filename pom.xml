@@ -8,11 +8,11 @@
         <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.shlimtech.common</groupId>
-    <artifactId>TypeSevenDatabaseCommon</artifactId>
+    <groupId>org.shlimtech.type7common</groupId>
+    <artifactId>TypeSevenDataBaseCommon</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>TypeSevenDatabaseCommon</name>
-    <description>TypeSevenDatabaseCommon</description>
+    <name>TypeSevenDataBaseCommon</name>
+    <description>TypeSevenDataBaseCommon</description>
     <properties>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
         <java.version>17</java.version>
@@ -38,7 +38,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.shlimtech.common</groupId>
+            <groupId>org.shlimtech.type6common</groupId>
             <artifactId>TypeSixDataBaseCommon</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
