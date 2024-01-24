@@ -8,5 +8,8 @@ public interface VersionedMetadataBuilder {
     String getVersion();
     String getParentVersion();
     Metadata upgradeFromParentVersion(Metadata metadata);
+    int metric(Metadata a, Metadata b);
+    boolean canMatch(Metadata a, Metadata b);
+    boolean validateMetadata(Metadata a);
 
 }

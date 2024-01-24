@@ -13,7 +13,8 @@ public class MetadataEntrySet {
 
     private String name;
     private String message;
-    private boolean multiChoice;
+    private int minimumChoices = 0;
+    private int maximumChoices = Integer.MAX_VALUE;
     private List<MetadataEntry> entries;
 
 }

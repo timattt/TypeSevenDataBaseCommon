@@ -60,6 +60,7 @@ public class MetadataService {
         Metadata metadata = getUserMetadataEntity(userID).getMetadata();
         if (!hasLatestVersion(metadata)) {
             metadata = update(metadata);
+            // TODO save updated metadata
         }
         return metadata;
     }
@@ -69,6 +70,9 @@ public class MetadataService {
         Metadata toSet = metadata;
         if (!hasLatestVersion(toSet)) {
             toSet = update(toSet);
+        }
+        if (!latest.validateMetadata(toSet)) {
+            throw new RuntimeException("metadata validation error");
         }
 
         Type7Metadata entity = getUserMetadataEntity(userId);
@@ -83,6 +87,18 @@ public class MetadataService {
         metadataDTO.getSelectedUsers().clear();
         metadataDTO.getSelectedUsers().addAll(metadata.getSelectedUsers().stream().map(userService::loadUser).toList());
         return metadataDTO;
+    }
+
+    public int metaMetric(Metadata a, Metadata b) {
+        return latest.metric(a, b);
+    }
+
+    public boolean canMatch(Metadata a, Metadata b) {
+        return a.getVersion().equals(b.getVersion()) && latest.canMatch(a, b);
+    }
+
+    public boolean isValid(Metadata metadata) {
+        return metadata.getVersion().equals(latest.getVersion()) && latest.validateMetadata(metadata);
     }
 
 }
