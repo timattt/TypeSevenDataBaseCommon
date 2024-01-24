@@ -68,8 +68,8 @@ public class MetadataService {
     }
 
     @Transactional
-    public void saveUserMetadata(int userId, MetadataDTO metadataDTO) {
-        Metadata toSet = metadataMapper.fromDTO(metadataDTO);
+    public void saveUserMetadata(int userId, Metadata metadata) {
+        Metadata toSet = metadata;
         if (!hasLatestVersion(toSet)) {
             toSet = update(toSet);
         }
@@ -80,6 +80,11 @@ public class MetadataService {
         Type7Metadata entity = getUserMetadataEntity(userId);
         entity.setMetadata(toSet);
         metadataRepository.save(entity);
+    }
+
+    @Transactional
+    public void saveUserMetadataDTO(int userId, MetadataDTO metadataDTO) {
+        saveUserMetadata(userId, metadataMapper.fromDTO(metadataDTO));
     }
 
     @Transactional
