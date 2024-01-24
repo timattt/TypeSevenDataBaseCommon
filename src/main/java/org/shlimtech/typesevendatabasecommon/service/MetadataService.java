@@ -3,6 +3,7 @@ package org.shlimtech.typesevendatabasecommon.service;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.shlimtech.typesevendatabasecommon.dto.MetadataDTO;
+import org.shlimtech.typesevendatabasecommon.mapper.MetadataMapper;
 import org.shlimtech.typesevendatabasecommon.metadata.Metadata;
 import org.shlimtech.typesevendatabasecommon.metadata.versions.V1Metadata;
 import org.shlimtech.typesevendatabasecommon.metadata.versions.VersionedMetadataBuilder;
@@ -24,6 +25,7 @@ public class MetadataService {
     private final UserService userService;
     private final Type7MetadataRepository metadataRepository;
     private final ModelMapper modelMapper;
+    private final MetadataMapper metadataMapper;
 
     public Metadata generateMetadata() {
         return latest.createNewMetadata();
@@ -66,8 +68,8 @@ public class MetadataService {
     }
 
     @Transactional
-    public void saveUserMetadata(int userId, Metadata metadata) {
-        Metadata toSet = metadata;
+    public void saveUserMetadata(int userId, MetadataDTO metadataDTO) {
+        Metadata toSet = metadataMapper.fromDTO(metadataDTO);
         if (!hasLatestVersion(toSet)) {
             toSet = update(toSet);
         }
@@ -82,11 +84,7 @@ public class MetadataService {
 
     @Transactional
     public MetadataDTO loadUserMetadataDTO(int userId) {
-        Metadata metadata = loadUserMetadata(userId);
-        MetadataDTO metadataDTO = modelMapper.map(metadata, MetadataDTO.class);
-        metadataDTO.getSelectedUsers().clear();
-        metadataDTO.getSelectedUsers().addAll(metadata.getSelectedUsers().stream().map(userService::loadUser).toList());
-        return metadataDTO;
+        return metadataMapper.toDTO(loadUserMetadata(userId));
     }
 
     public int metaMetric(Metadata a, Metadata b) {
