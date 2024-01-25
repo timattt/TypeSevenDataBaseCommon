@@ -1,5 +1,6 @@
 package org.shlimtech.typesevendatabasecommon.metadata.versions;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.shlimtech.typesevendatabasecommon.metadata.Metadata;
 import org.shlimtech.typesevendatabasecommon.metadata.MetadataEntry;
@@ -11,44 +12,17 @@ import java.util.stream.Collectors;
 
 @Component
 @Log
+@RequiredArgsConstructor
 public class V1Metadata implements VersionedMetadataBuilder {
 
     private static final String GENDER = "Пол";
-    private static final String TARGET = "Кого ищем";
+    private static final String TARGET = "Цель";
     private static final String MAN = "Парень";
     private static final String WOMAN = "Девушка";
 
     @Override
-    public Metadata createNewMetadata() {
-        Metadata metadata = new Metadata();
-        metadata.setVersion(getVersion());
-
-        MetadataEntrySet gender = new MetadataEntrySet();
-        gender.setName(GENDER);
-        gender.setMinimumChoices(1);
-        gender.setMaximumChoices(1);
-        gender.setMessage("Кто вы?");
-        gender.setEntries(List.of(new MetadataEntry(MAN, true), new MetadataEntry(WOMAN)));
-
-        MetadataEntrySet request = new MetadataEntrySet();
-        request.setName(TARGET);
-        request.setMessage("Кого ищем?");
-        request.setMinimumChoices(1);
-        request.setMaximumChoices(1);
-        request.setEntries(List.of(new MetadataEntry(MAN, "Парней"), new MetadataEntry(WOMAN, "Девушек", true)));
-
-        MetadataEntrySet hobbies = new MetadataEntrySet();
-        hobbies.setName("Увлечения");
-        hobbies.setEntries(List.of(new MetadataEntry("Бег"), new MetadataEntry("Покер")));
-
-        MetadataEntrySet music = new MetadataEntrySet();
-        music.setName("Любимая музыка");
-        music.setEntries(List.of(new MetadataEntry("Классика"), new MetadataEntry("Попса")));
-
-        metadata.setMetadataEntrySets(List.of(gender, request, hobbies, music));
-        metadata.setSelectedUsers(List.of());
-
-        return metadata;
+    public String getMetadataTemplatePath() {
+        return "classpath:metadataVersions/v1.yaml";
     }
 
     @Override
@@ -156,7 +130,7 @@ public class V1Metadata implements VersionedMetadataBuilder {
                 .filter(entry -> !entry.getName().equals(GENDER) && !entry.getName().equals(TARGET)).collect(Collectors.toList());
     }
 
-    private String getGender(Metadata metadata) {
+    public String getGender(Metadata metadata) {
         String gender = metadata
                 .getMetadataEntrySets()
                 .stream()
@@ -172,7 +146,7 @@ public class V1Metadata implements VersionedMetadataBuilder {
         return gender;
     }
 
-    private String getTarget(Metadata metadata) {
+    public String getTarget(Metadata metadata) {
         String target = metadata
                 .getMetadataEntrySets()
                 .stream()

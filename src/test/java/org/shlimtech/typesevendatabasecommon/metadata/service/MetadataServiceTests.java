@@ -1,4 +1,4 @@
-package org.shlimtech.typesevendatabasecommon.metadata;
+package org.shlimtech.typesevendatabasecommon.metadata.service;
 
 import org.junit.jupiter.api.Test;
 import org.shlimtech.typesevendatabasecommon.BaseTest;

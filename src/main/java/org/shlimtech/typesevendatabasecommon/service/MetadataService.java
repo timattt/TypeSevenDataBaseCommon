@@ -1,6 +1,9 @@
 package org.shlimtech.typesevendatabasecommon.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.shlimtech.typesevendatabasecommon.dto.MetadataDTO;
 import org.shlimtech.typesevendatabasecommon.mapper.MetadataMapper;
@@ -11,6 +14,8 @@ import org.shlimtech.typesevendatabasecommon.model.Type7Metadata;
 import org.shlimtech.typesevendatabasecommon.repository.Type7MetadataRepository;
 import org.shlimtech.typesixdatabasecommon.dto.UserDTO;
 import org.shlimtech.typesixdatabasecommon.service.UserService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +31,18 @@ public class MetadataService {
     private final Type7MetadataRepository metadataRepository;
     private final ModelMapper modelMapper;
     private final MetadataMapper metadataMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory()).findAndRegisterModules();
+    private final ResourceLoader resourceLoader;
 
     public Metadata generateMetadata() {
-        return latest.createNewMetadata();
+        return generateMetadata(latest);
+    }
+
+    @SneakyThrows
+    public Metadata generateMetadata(VersionedMetadataBuilder builder) {
+        Resource resource = resourceLoader.getResource(builder.getMetadataTemplatePath());
+        // HERE ONLY INPUT STREAM CAN BE USED BECAUSE FILE WILL BE INSIDE JAR
+        return objectMapper.readValue(resource.getInputStream(), Metadata.class);
     }
 
     public boolean hasLatestVersion(Metadata metadata) {

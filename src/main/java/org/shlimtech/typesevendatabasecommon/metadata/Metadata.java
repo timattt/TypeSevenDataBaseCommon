@@ -15,6 +15,6 @@ public class Metadata {
 
     private String version;
     private List<MetadataEntrySet> metadataEntrySets;
-    private List<Integer> selectedUsers;
+    private List<Integer> selectedUsers = List.of();
 
 }

@@ -4,7 +4,7 @@ import org.shlimtech.typesevendatabasecommon.metadata.Metadata;
 
 public interface VersionedMetadataBuilder {
 
-    Metadata createNewMetadata();
+    String getMetadataTemplatePath();
     String getVersion();
     String getParentVersion();
     Metadata upgradeFromParentVersion(Metadata metadata);
