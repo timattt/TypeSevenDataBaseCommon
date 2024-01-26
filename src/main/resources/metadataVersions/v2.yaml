@@ -1,0 +1,36 @@
+version: "v2"
+metadataEntrySets:
+  - name: "Пол"
+    message: "Кто вы?"
+    minimumChoices: 1
+    maximumChoices: 1
+    entries:
+      - name: "Парень"
+        message: "Парень"
+        flag: true
+      - name: "Девушка"
+        message: "Девушка"
+  - name: "Цель"
+    message: "Кого ищем?"
+    minimumChoices: 1
+    maximumChoices: 1
+    entries:
+      - name: "Парень"
+        message: "Парней"
+      - name: "Девушка"
+        message: "Девушек"
+        flag: true
+  - name: "Увлечения"
+    message: "Какие у вас увлечения?"
+    entries:
+      - name: "Покер"
+        message: "Покер"
+      - name: "Бег"
+        message: "Бег"
+  - name: "Спорт"
+    message: "Каким спортом занимаетесь?"
+    entries:
+      - name: "Бег"
+        message: "Бег"
+      - name: "Плавание"
+        message: "Плавание"

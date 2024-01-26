@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.modelmapper.ModelMapper;
 import org.shlimtech.typesevendatabasecommon.dto.MetadataDTO;
 import org.shlimtech.typesevendatabasecommon.mapper.MetadataMapper;
 import org.shlimtech.typesevendatabasecommon.metadata.Metadata;
-import org.shlimtech.typesevendatabasecommon.metadata.versions.V1Metadata;
+import org.shlimtech.typesevendatabasecommon.metadata.versions.V2Metadata;
 import org.shlimtech.typesevendatabasecommon.metadata.versions.VersionedMetadataBuilder;
 import org.shlimtech.typesevendatabasecommon.model.Type7Metadata;
 import org.shlimtech.typesevendatabasecommon.repository.Type7MetadataRepository;
@@ -26,10 +25,9 @@ import java.util.List;
 public class MetadataService {
 
     private List<VersionedMetadataBuilder> allVersions;
-    private final V1Metadata latest;
+    private final V2Metadata latest;
     private final UserService userService;
     private final Type7MetadataRepository metadataRepository;
-    private final ModelMapper modelMapper;
     private final MetadataMapper metadataMapper;
     private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory()).findAndRegisterModules();
     private final ResourceLoader resourceLoader;
@@ -53,11 +51,19 @@ public class MetadataService {
         return allVersions.stream().filter(builder -> builder.getVersion().equals(version)).findAny().get();
     }
 
-    public Metadata update(Metadata metadata) {
-        // TODO create version upgrade mechanics
-        return metadata;
+    private Metadata update(Metadata metadata, VersionedMetadataBuilder builder) {
+        if (metadata.getVersion().equals(builder.getParentVersion())) {
+            return builder.upgradeFromParentVersion(metadata);
+        } else {
+            return update(metadata, findBuilder(builder.getParentVersion()));
+        }
     }
 
+    public Metadata update(Metadata metadata) {
+        return update(metadata, latest);
+    }
+
+    @Transactional
     private Type7Metadata getUserMetadataEntity(int userId) {
         UserDTO user = userService.loadUser(userId);
 
@@ -76,7 +82,7 @@ public class MetadataService {
         Metadata metadata = getUserMetadataEntity(userID).getMetadata();
         if (!hasLatestVersion(metadata)) {
             metadata = update(metadata);
-            // TODO save updated metadata
+            saveUserMetadata(userID, metadata);
         }
         return metadata;
     }
