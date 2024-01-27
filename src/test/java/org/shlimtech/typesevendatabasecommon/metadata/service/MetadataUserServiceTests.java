@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.shlimtech.typesevendatabasecommon.BaseTest;
 import org.shlimtech.typesevendatabasecommon.dto.MetadataDTO;
 import org.shlimtech.typesevendatabasecommon.metadata.Metadata;
-import org.shlimtech.typesevendatabasecommon.metadata.versions.V2Metadata;
+import org.shlimtech.typesevendatabasecommon.metadata.versions.V3Metadata;
 import org.shlimtech.typesevendatabasecommon.service.MetadataService;
 import org.shlimtech.typesixdatabasecommon.dto.UserDTO;
 import org.shlimtech.typesixdatabasecommon.service.UserService;
@@ -22,7 +22,7 @@ public class MetadataUserServiceTests extends BaseTest {
     private UserService userService;
 
     @Autowired
-    private V2Metadata v2Metadata;
+    private V3Metadata latest;
 
     private int insertTestUser() {
         userService.createOrComplementUser(UserDTO.builder().email("ggg@gmail.com").firstName("hhh").build());
@@ -36,7 +36,7 @@ public class MetadataUserServiceTests extends BaseTest {
         int id = insertTestUser();
         Metadata metadata = metadataService.generateMetadata();
         metadataService.saveUserMetadata(id, metadata);
-        Assert.isTrue(metadataService.loadUserMetadata(id).getVersion().equals(v2Metadata.getVersion()), "incorrect metadata");
+        Assert.isTrue(metadataService.loadUserMetadata(id).getVersion().equals(latest.getVersion()), "incorrect metadata");
     }
 
     @Test
