@@ -16,7 +16,7 @@ public class MetadataMapper {
     private final UserService userService;
 
     public Metadata fromDTO(MetadataDTO dto) {
-        return new Metadata(dto.getVersion(), dto.getMetadataEntrySets(), dto.getSelectedUsers().stream().map(UserDTO::getId).toList());
+        return new Metadata(dto.getVersion(), dto.getMetadataEntrySets(), dto.getSelectedUsers().stream().map(UserDTO::getId).toList(), false);
     }
 
     public MetadataDTO toDTO(Metadata metadata) {
