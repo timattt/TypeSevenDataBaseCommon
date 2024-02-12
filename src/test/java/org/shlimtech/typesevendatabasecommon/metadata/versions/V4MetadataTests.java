@@ -9,7 +9,7 @@ import org.shlimtech.typesixdatabasecommon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-public class V3MetadataTests extends BaseTest {
+public class V4MetadataTests extends BaseTest {
 
     @Autowired
     private MetadataService metadataService;
@@ -26,6 +26,9 @@ public class V3MetadataTests extends BaseTest {
     @Autowired
     private V3Metadata v3Metadata;
 
+    @Autowired
+    private V4Metadata v4Metadata;
+
     private int insertTestUser() {
         userService.createOrComplementUser(UserDTO.builder().email("ggg@gmail.com").firstName("hhh").build());
         Assert.isTrue(userService.loadUser("ggg@gmail.com") != null, "must contains user");
@@ -34,8 +37,19 @@ public class V3MetadataTests extends BaseTest {
     }
 
     @Test
-    public void simpleTest() {
-        Metadata metadata = metadataService.generateMetadata(v3Metadata);
-        Assert.isTrue(metadata.getVersion().equals("v3"), "bad version");
+    public void simpleUpgradeFromV1Test() {
+        int userId = insertTestUser();
+        metadataService.saveUserMetadata(userId, metadataService.generateMetadata(v1Metadata));
+        Metadata migrated = metadataService.loadUserMetadata(userId);
+        Assert.isTrue(migrated.getVersion().equals(v4Metadata.getVersion()), "not migrated");
     }
+
+    @Test
+    public void simpleUpgradeFromV3Test() {
+        int userId = insertTestUser();
+        metadataService.saveUserMetadata(userId, metadataService.generateMetadata(v3Metadata));
+        Metadata migrated = metadataService.loadUserMetadata(userId);
+        Assert.isTrue(migrated.getVersion().equals(v4Metadata.getVersion()), "not migrated");
+    }
+
 }

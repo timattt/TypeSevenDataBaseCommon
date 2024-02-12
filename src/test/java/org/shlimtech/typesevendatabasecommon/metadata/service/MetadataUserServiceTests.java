@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.shlimtech.typesevendatabasecommon.BaseTest;
 import org.shlimtech.typesevendatabasecommon.dto.MetadataDTO;
 import org.shlimtech.typesevendatabasecommon.metadata.Metadata;
-import org.shlimtech.typesevendatabasecommon.metadata.versions.V3Metadata;
+import org.shlimtech.typesevendatabasecommon.metadata.versions.V4Metadata;
 import org.shlimtech.typesevendatabasecommon.service.MetadataService;
 import org.shlimtech.typesixdatabasecommon.dto.UserDTO;
 import org.shlimtech.typesixdatabasecommon.service.UserService;
@@ -22,7 +22,7 @@ public class MetadataUserServiceTests extends BaseTest {
     private UserService userService;
 
     @Autowired
-    private V3Metadata latest;
+    private V4Metadata latest;
 
     private int insertTestUser() {
         userService.createOrComplementUser(UserDTO.builder().email("ggg@gmail.com").firstName("hhh").build());

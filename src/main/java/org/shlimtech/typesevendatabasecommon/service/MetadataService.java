@@ -7,7 +7,7 @@ import lombok.SneakyThrows;
 import org.shlimtech.typesevendatabasecommon.dto.MetadataDTO;
 import org.shlimtech.typesevendatabasecommon.mapper.MetadataMapper;
 import org.shlimtech.typesevendatabasecommon.metadata.Metadata;
-import org.shlimtech.typesevendatabasecommon.metadata.versions.V3Metadata;
+import org.shlimtech.typesevendatabasecommon.metadata.versions.V4Metadata;
 import org.shlimtech.typesevendatabasecommon.metadata.versions.VersionedMetadataBuilder;
 import org.shlimtech.typesevendatabasecommon.model.Type7Metadata;
 import org.shlimtech.typesevendatabasecommon.repository.Type7MetadataRepository;
@@ -25,7 +25,7 @@ import java.util.List;
 public class MetadataService {
 
     private List<VersionedMetadataBuilder> allVersions;
-    private final V3Metadata latest;
+    private final V4Metadata latest;
     private final UserService userService;
     private final Type7MetadataRepository metadataRepository;
     private final MetadataMapper metadataMapper;
@@ -55,7 +55,7 @@ public class MetadataService {
         if (metadata.getVersion().equals(builder.getParentVersion())) {
             return builder.upgradeFromParentVersion(metadata);
         } else {
-            return update(metadata, findBuilder(builder.getParentVersion()));
+            return builder.upgradeFromParentVersion(update(metadata, findBuilder(builder.getParentVersion())));
         }
     }
 
